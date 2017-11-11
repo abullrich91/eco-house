@@ -181,7 +181,7 @@ void north() //función secuencia giro
 
 void northWest() //función secuencia giro
 {
-  for(int i = 0; i < 80; i++)
+  for(int i = 0; i < 85; i++)
   {
     clockwise2();
   }
@@ -190,7 +190,7 @@ void northWest() //función secuencia giro
 
 void southWest() //función secuencia giro
 {
-for(int i = 0; i < 80; i++)
+for(int i = 0; i < 85; i++)
   {
     anticlockwise2();
   }
@@ -212,7 +212,7 @@ void south() //función secuencia giro
 
 void southEast() //función secuencia giro
 {
-for(int i = 0; i < 80; i++)
+for(int i = 0; i < 85; i++)
   {
     clockwise2();
   }
@@ -220,7 +220,7 @@ for(int i = 0; i < 80; i++)
 
 void northEast() //función secuencia giro
 {
-for(int i = 0; i < 80; i++)
+for(int i = 0; i < 85; i++)
   {
     anticlockwise2();
   }
