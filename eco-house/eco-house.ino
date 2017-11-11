@@ -62,31 +62,31 @@ void loop(){
 
   switch (pos) {
     case 0:
-      case0();
+      north();
       break;
       
     case 1:
-      case1();
+      northWest();
       break;
       
     case 2:
-      case2();
+      southWest();
       break; 
           
     case 3:
-      case3();
+      south();
       break;
       
     case 4:
-      case4();
+      southEast();
       break;  
          
     case 5:
-      case5();
+      northEast();
       break;
       
     case 6: //arriba
-      case6();
+      UP();
       break; 
 
   }
@@ -147,11 +147,6 @@ void setOutput2 (int out) {
   digitalWrite(motorPin24, bitRead(lookup[out], 3));
 }
 
-int greater(int value0, int value1) {
-  boolean result = false;
-  return result = max(value0, value1);
-}
-
 void refresh() //función secuencia giro
 {
   values [0] = analogRead(sensorPin0); // read the value from the sensor
@@ -176,40 +171,34 @@ void prints() //función secuencia giro
 }
 
 
-void case0() //función secuencia giro
+void north() //función secuencia giro
 {
-  for(int i = 0; i < 800; i++)
+  /*for(int i = 0; i < 800; i++)
+  {
+     anticlockwise1();
+  }*/
+}
+
+void northWest() //función secuencia giro
+{
+  for(int i = 0; i < 80; i++)
+  {
+    clockwise2();
+  }
+}
+
+
+void southWest() //función secuencia giro
+{
+for(int i = 0; i < 80; i++)
   {
     anticlockwise2();
   }
 }
 
-void case1() //función secuencia giro
+void south() //función secuencia giro
 {
-  for(int i = 0; i < 800; i++)
-  {
-    clockwise1();
-  }
-}
-
-
-void case2() //función secuencia giro
-{
-  for(int e = 0; e < 2; e++){
-    for(int i = 0; i < 200; i++)
-    {
-      anticlockwise1();
-    }
-    for(int i = 0; i < 200; i++)
-    {
-      clockwise2();
-    }
-  }
-}
-
-void case3() //función secuencia giro
-{
-  for(int e = 0; e < 10; e++){
+  /*for(int e = 0; e < 10; e++){
     for(int i = 0; i < 50; i++)
     {
       anticlockwise2();
@@ -218,40 +207,26 @@ void case3() //función secuencia giro
     {
       clockwise1();
     }
+  }*/
+}
+
+void southEast() //función secuencia giro
+{
+for(int i = 0; i < 80; i++)
+  {
+    clockwise2();
   }
 }
 
-void case4() //función secuencia giro
+void northEast() //función secuencia giro
 {
-  for(int e = 0; e < 5; e++){
-    for(int i = 0; i < 20; i++)
-    {
-      anticlockwise1();
-    }
-    for(int i = 0; i < 80; i++)
-    {
-      clockwise1();
-    }
+for(int i = 0; i < 80; i++)
+  {
+    anticlockwise2();
   }
 }
 
-void case5() //función secuencia giro
-{
-{
-  for(int e = 0; e < 5; e++){
-    for(int i = 0; i < 80; i++)
-    {
-      anticlockwise1();
-    }
-    for(int i = 0; i < 20; i++)
-    {
-      clockwise1();
-    }
-  }
-}
-}
-
-void case6() //función secuencia giro
+void UP() //función secuencia giro
 {
   delay(1000);
 }
