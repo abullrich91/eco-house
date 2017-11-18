@@ -187,7 +187,7 @@ void northWest() //función secuencia giro
 {
   int i = 0;
   while(i < 40 && !limitM){
-    clockwise2();
+    anticlockwise2();
     limit ();
     counts ++;
     i ++;
@@ -199,7 +199,7 @@ void southWest() //función secuencia giro
 {
   int i = 0;
   while(i < 40 && !limitM){
-    anticlockwise2();
+    clockwise2();
     limit ();
     counts --;
     i ++;
@@ -224,7 +224,7 @@ void southEast() //función secuencia giro
 {
   int i = 0;
   while(i < 40 && !limitM){
-    clockwise2();
+    anticlockwise2();
     limit ();
     counts ++;
     i ++;
@@ -235,7 +235,7 @@ void northEast() //función secuencia giro
 {
   int i = 0;
   while(i < 40 && !limitM){
-    anticlockwise2();
+    clockwise2();
     limit ();
     counts --;
     i ++;
@@ -253,7 +253,7 @@ void limit ()
   {
     for(int i = 0; i < 500; i++)
     {
-      anticlockwise2();
+      clockwise2();
       counts --;  
     }
     limitM = true;
@@ -262,7 +262,7 @@ void limit ()
   {
     for(int i = 0; i < 500; i++)
     {
-      clockwise2();
+      anticlockwise2();
       counts ++;
     }
     limitM = true;
