@@ -5,20 +5,22 @@
 
 //declaración de las variables para los pines del motor
 // motor 1
-int motorPin11 = 8;    // Azul   - 28BYJ48 pin 1 motor
-int motorPin12 = 9;    // Rosa   - 28BYJ48 pin 2 motor
-int motorPin13 = 10;    // Amarillo - 28BYJ48 pin 3 motor
-int motorPin14 = 11;    // Naranja - 28BYJ48 pin 4 motor
+int motorPin11 = 4;    // Azul   - 28BYJ48 pin 1 motor
+int motorPin12 = 5;    // Rosa   - 28BYJ48 pin 2 motor
+int motorPin13 = 6;    // Amarillo - 28BYJ48 pin 3 motor
+int motorPin14 = 7;    // Naranja - 28BYJ48 pin 4 motor
 
 // motor 2
-int motorPin21 = 4;
-int motorPin22 = 5;
-int motorPin23 = 6;
-int motorPin24 = 7;
+int motorPin21 = 8;
+int motorPin22 = 9;
+int motorPin23 = 10;
+int motorPin24 = 11;
 
 int motorSpeed = 1500;  //variable para fijar la velocidad del motor (el retraso entre cada secuencia) Original = 1200 
-int count = 0;          // cuenta de los pasos dados
-int countsperrev = 512; // número de pasos por vuelta completa 
+float counts = 500;          // cuenta de los pasos dados
+int countsL = 1000; // número de pasos por vuelta completa 
+
+bool limitM = false;
 int lookup[8] = {B01000, B01100, B00100, B00110, B00010, B00011, B00001, B01001};
 
 int sensorPin0 = A0; // select the input pin for LDR
@@ -31,6 +33,7 @@ int sensorPin6 = A6;
 int values [7] = {0,0,0,0,0,0,0};
 int maxi = 0;
 int pos = 6;
+
 
 
 void setup() {
@@ -98,7 +101,7 @@ void loop(){
 //creación funciones giro horario y antihorario
 void anticlockwise1() 
 {
-  for(int i = 0; i < 8; i++)
+  for(int i = 0; i <= 7 ; i++)
   {
     setOutput1(i);
     delayMicroseconds(motorSpeed);
@@ -116,7 +119,7 @@ void clockwise1()
 
 void anticlockwise2() 
 {
-  for(int i = 0; i < 8; i++)
+  for(int i = 0; i <= 7; i++)
   {
     setOutput2(i);
     delayMicroseconds(motorSpeed);
@@ -159,6 +162,7 @@ void refresh() //función secuencia giro
 
   maxi = values [6];
   pos = 6;
+  limitM = false;
 
 }
 
@@ -181,18 +185,24 @@ void north() //función secuencia giro
 
 void northWest() //función secuencia giro
 {
-  for(int i = 0; i < 85; i++)
-  {
+  int i = 0;
+  while(i < 40 && !limitM){
     clockwise2();
+    limit ();
+    counts ++;
+    i ++;
   }
 }
 
 
 void southWest() //función secuencia giro
 {
-for(int i = 0; i < 85; i++)
-  {
+  int i = 0;
+  while(i < 40 && !limitM){
     anticlockwise2();
+    limit ();
+    counts --;
+    i ++;
   }
 }
 
@@ -212,17 +222,23 @@ void south() //función secuencia giro
 
 void southEast() //función secuencia giro
 {
-for(int i = 0; i < 85; i++)
-  {
+  int i = 0;
+  while(i < 40 && !limitM){
     clockwise2();
+    limit ();
+    counts ++;
+    i ++;
   }
 }
 
 void northEast() //función secuencia giro
 {
-for(int i = 0; i < 85; i++)
-  {
+  int i = 0;
+  while(i < 40 && !limitM){
     anticlockwise2();
+    limit ();
+    counts --;
+    i ++;
   }
 }
 
@@ -231,4 +247,30 @@ void UP() //función secuencia giro
   delay(1000);
 }
 
+void limit ()
+{
+  if (counts > countsL)
+  {
+    for(int i = 0; i < 500; i++)
+    {
+      anticlockwise2();
+      counts --;  
+    }
+    limitM = true;
+  } 
+  if (counts < 0)
+  {
+    for(int i = 0; i < 500; i++)
+    {
+      clockwise2();
+      counts ++;
+    }
+    limitM = true;
+  } 
+
+   Serial.println("############");
+   Serial.println(counts);
+
+
+}
 
