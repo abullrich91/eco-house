@@ -17,8 +17,9 @@ int motorPin23 = 10;
 int motorPin24 = 11;
 
 int motorSpeed = 1500;  //variable para fijar la velocidad del motor (el retraso entre cada secuencia) Original = 1200 
-float counts = 500;          // cuenta de los pasos dados
-int countsL = 1000; // número de pasos por vuelta completa 
+int counts = 500;          // cuenta de los pasos dados
+int countsL = 1000; // número de pasos por vuelta completa
+int rewindSteps = 500;
 
 bool limitM = false;
 int lookup[8] = {B01000, B01100, B00100, B00110, B00010, B00011, B00001, B01001};
@@ -33,8 +34,17 @@ int sensorPin6 = A6;
 int values [7] = {0,0,0,0,0,0,0};
 int maxi = 0;
 int pos = 6;
+int delayTime = 250;
+int verticalDelay = 400;
+int steps = 10;
+int verticalSteps = 20;
 
-
+// Acelerometro
+int x; // x axis variable
+int y; // y axis variable
+int z; // z axis variable
+double angleYZ = 0;
+double angleXZ = 0;
 
 void setup() {
   //declare the motor pins as outputs
@@ -52,9 +62,10 @@ void setup() {
 }
 
 void loop(){
+  int chosenDelay;
   refresh();
-  prints();
-
+  // prints();
+  readAngle();
   
   for (int i=0; i < 6; i++){
     if ((maxi + 50) < values [i]){
@@ -66,35 +77,41 @@ void loop(){
   switch (pos) {
     case 0:
       north();
+      chosenDelay = verticalDelay;
       break;
       
     case 1:
       northWest();
+      chosenDelay = delayTime;
       break;
       
     case 2:
       southWest();
+      chosenDelay = delayTime;
       break; 
           
     case 3:
       south();
+      chosenDelay = verticalDelay;
       break;
       
     case 4:
       southEast();
+      chosenDelay = delayTime;
       break;  
          
     case 5:
       northEast();
+      chosenDelay = delayTime;
       break;
       
     case 6: //arriba
       UP();
+      chosenDelay = delayTime;
       break; 
 
   }
-  delay(1000);
-   
+  delay(chosenDelay);
 }
 
 
@@ -163,7 +180,6 @@ void refresh() //función secuencia giro
   maxi = values [6];
   pos = 6;
   limitM = false;
-
 }
 
 void prints() //función secuencia giro
@@ -177,16 +193,20 @@ void prints() //función secuencia giro
 
 void north() //función secuencia giro
 {
-  /*for(int i = 0; i < 800; i++)
+  for(int i = 0; i < verticalSteps; i++)
   {
-     anticlockwise1();
-  }*/
+    if (isValidAngle()) {
+      anticlockwise1();
+    } else {
+      clockwise1();
+    }
+  }
 }
 
 void northWest() //función secuencia giro
 {
   int i = 0;
-  while(i < 40 && !limitM){
+  while(i < steps && !limitM){
     anticlockwise2();
     limit ();
     counts ++;
@@ -198,7 +218,7 @@ void northWest() //función secuencia giro
 void southWest() //función secuencia giro
 {
   int i = 0;
-  while(i < 40 && !limitM){
+  while(i < steps && !limitM){
     clockwise2();
     limit ();
     counts --;
@@ -208,22 +228,20 @@ void southWest() //función secuencia giro
 
 void south() //función secuencia giro
 {
-  /*for(int e = 0; e < 10; e++){
-    for(int i = 0; i < 50; i++)
-    {
-      anticlockwise2();
+  for(int i = 0; i < verticalSteps; i++)
+  {
+    if (isValidAngle()) {
+     clockwise1(); 
+    } else {
+      anticlockwise1();
     }
-    for(int i = 0; i < 50; i++)
-    {
-      clockwise1();
-    }
-  }*/
+  }
 }
 
 void southEast() //función secuencia giro
 {
   int i = 0;
-  while(i < 40 && !limitM){
+  while(i < steps && !limitM){
     anticlockwise2();
     limit ();
     counts ++;
@@ -234,7 +252,7 @@ void southEast() //función secuencia giro
 void northEast() //función secuencia giro
 {
   int i = 0;
-  while(i < 40 && !limitM){
+  while(i < steps && !limitM){
     clockwise2();
     limit ();
     counts --;
@@ -244,14 +262,14 @@ void northEast() //función secuencia giro
 
 void UP() //función secuencia giro
 {
-  delay(1000);
+  delay(delayTime);
 }
 
 void limit ()
 {
   if (counts > countsL)
   {
-    for(int i = 0; i < 500; i++)
+    for(int i = 0; i < rewindSteps; i++)
     {
       clockwise2();
       counts --;  
@@ -260,7 +278,7 @@ void limit ()
   } 
   if (counts < 0)
   {
-    for(int i = 0; i < 500; i++)
+    for(int i = 0; i < rewindSteps; i++)
     {
       anticlockwise2();
       counts ++;
@@ -270,7 +288,31 @@ void limit ()
 
    Serial.println("############");
    Serial.println(counts);
+}
 
+void readAngle() {
+  x = analogRead(8);
+  y = analogRead(9);
+  z = analogRead(10);
 
+  /*Para calcular angulos*/
+   x = map(x, 0, 1023, -500, 500);
+   y = map(y, 0, 1023, -500, 500);
+   z = map(z, 0, 1023, -500, 500);
+
+   angleYZ = atan((double)y / (double)z);
+   angleYZ = angleYZ*(57.2958);
+
+   angleXZ = atan((double)x / (double)z);
+   angleXZ = angleXZ*(57.2958);
+   delay(delayTime);
+}
+
+bool isValidAngle() {
+  if (angleXZ <= 10 or angleYZ <= 10) {
+    return false;
+  } else {
+    return true;
+  }
 }
 
