@@ -38,7 +38,7 @@ int delayTime = 250;
 int verticalDelay = 400;
 int steps = 10;
 int verticalSteps = 20;
-
+int rank = 20;
 // Acelerometro
 int x; // x axis variable
 int y; // y axis variable
@@ -64,11 +64,11 @@ void setup() {
 void loop(){
   int chosenDelay;
   refresh();
-  // prints();
+  prints();
   readAngle();
   
   for (int i=0; i < 6; i++){
-    if ((maxi + 50) < values [i]){
+    if ((maxi + rank) < values [i]){
      maxi = values [i];
      pos = i;
     } 
@@ -185,6 +185,8 @@ void refresh() //función secuencia giro
 void prints() //función secuencia giro
 {
   for (int i=0; i < 7; i++){
+      Serial.print(i); //prints the values coming from the sensor on the screen
+    Serial.print(": ");
     Serial.println(values [i]); //prints the values coming from the sensor on the screen
   }
   Serial.println("############");
@@ -207,7 +209,7 @@ void northWest() //función secuencia giro
 {
   int i = 0;
   while(i < steps && !limitM){
-    anticlockwise2();
+    clockwise2();
     limit ();
     counts ++;
     i ++;
@@ -253,7 +255,7 @@ void northEast() //función secuencia giro
 {
   int i = 0;
   while(i < steps && !limitM){
-    clockwise2();
+    anticlockwise2();
     limit ();
     counts --;
     i ++;
@@ -271,7 +273,7 @@ void limit ()
   {
     for(int i = 0; i < rewindSteps; i++)
     {
-      clockwise2();
+      anticlockwise2();
       counts --;  
     }
     limitM = true;
@@ -280,14 +282,14 @@ void limit ()
   {
     for(int i = 0; i < rewindSteps; i++)
     {
-      anticlockwise2();
+      clockwise2();
       counts ++;
     }
     limitM = true;
   } 
 
-   Serial.println("############");
-   Serial.println(counts);
+   //Serial.println("############");
+   //Serial.println(counts);
 }
 
 void readAngle() {
